@@ -23,6 +23,7 @@ class Individual:
     def __init__(self, splash_parameters=None):
         self.splash_parameters = splash_parameters
         self.objective_value = None 
+        self.pixels_array = None 
 
     def generate_random_inidividual(self):
         splash_list = [Splash() for i in range(Individual.N)]
@@ -30,6 +31,7 @@ class Individual:
             splash.random_splash(Splash.MAX_RANK, Individual.LENGTH, Individual.WIDTH)
 
         self.splash_parameters = splash_list
+        self.pixels_array = self.convert_to_pixels_array()
 
     """
     zwraca tablice z wartością koloru w kazdym pixelu obrazka 
@@ -59,11 +61,10 @@ class Individual:
                     if pixels_array_ranks[pixel[0]][pixel[1]] < splash.rank:
                         pixels_array[pixel[0]][pixel[1]] = splash.color
                         pixels_array_ranks[pixel[0]][pixel[1]] = splash.rank
-        
         return pixels_array
     
     """
     wyświetla obrazek zakodowany w danym osobnuiku za pomocą plt.imshow()
     """
     def show_image(self):
-        plt.imshow(self.convert_to_pixels_array())
+        plt.imshow(self.pixels_array)

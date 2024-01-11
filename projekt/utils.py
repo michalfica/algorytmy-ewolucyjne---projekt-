@@ -1,13 +1,5 @@
 from skimage import io
 
-import individual 
-from imp import reload 
-reload(individual)
-
-from individual import Individual
-from individual import Splash
-import numpy as np
-
 class Utils:
 
     def __init__(self, picture_name):
@@ -19,5 +11,10 @@ class Utils:
     def objective_function(self, individual):
         result = 0 
         # przechodze po kazdym pixelu obrazka 
-        # sprawdzam jaki kolor ma tam individual a jaki ma tam docelowy obrazek i dodaje 
+        # sprawdzam jaki kolor ma tam individual a jaki ma tam docelowy obrazek i dodaje rożnice 
+
+        for i in range(self.length):
+            for j in range(self.width):
+                for c in range(3):
+                    result += abs(self.objective_picture[i][j][c] - individual.pixels_array[i][j][c])
         return result 
