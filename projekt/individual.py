@@ -14,8 +14,8 @@ class Individual:
     LENGTH, WIDTH - parametry obrazka
     N             - liczba plam  
     """
-    LENGTH, WIDTH = 200, 200   
-    N             = 100
+    LENGTH, WIDTH = 720, 483   
+    N             = 200
 
     """
     splash_parameters - tablica z parametrami kolejnych plam (kolorem, rangą, położeniem)
@@ -43,8 +43,8 @@ class Individual:
         def outside_of_splash(pixel, x, y, r):
             return (pixel[0]-x)**2 + (pixel[1]-y)**2 > r**2
         
-        pixels_array = np.zeros((Individual.WIDTH, Individual.LENGTH, 3), dtype=np.int64)
-        pixels_array_ranks = np.zeros((Individual.WIDTH, Individual.LENGTH, 1))
+        pixels_array = np.zeros((Individual.LENGTH, Individual.WIDTH, 3), dtype=np.int64)
+        pixels_array_ranks = np.zeros((Individual.LENGTH, Individual.WIDTH, 1))
  
         for splash in self.splash_parameters:
             x, y = splash.x, splash.y 
