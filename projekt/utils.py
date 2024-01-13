@@ -1,4 +1,5 @@
 from skimage import io
+import numpy as np 
 
 import individual 
 from imp import reload 
@@ -42,3 +43,16 @@ class Utils:
     def evaluate_population(self, P):
         for i in range(P.population_size):
             P.population[i].objective_value = self.objective_function(P.population[i])
+
+    """
+    zwraca indeksy osobników wylosowanych na rodziców metodą ruletki 
+    """
+    def parents_selection(self, P, number_of_parents):
+        objective_values = np.array([x.objective_value for x in P.population])
+        fitness_values = objective_values.max() - objective_values
+        if fitness_values.sum() > 0:
+            fitness_values = fitness_values / fitness_values.sum()
+        else:
+            fitness_values = np.ones(P.population_size) / P.population_size
+        parent_index = np.random.choice(P.population_size, number_of_parents, True, fitness_values).astype(np.int64)
+        return parent_index
