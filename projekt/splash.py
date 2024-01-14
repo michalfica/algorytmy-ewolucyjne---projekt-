@@ -4,7 +4,7 @@ class Splash:
     DEFAULT_R = 100 
     MAX_RANK  = 10 
 
-    BLACK = np.array([0, 0, 0], dtype=np.int64)
+    BLACK = np.array([0, 0, 0], dtype=np.uint64)
 
     def __init__(self, color=BLACK, rank=MAX_RANK, x=0, y=0, r=DEFAULT_R):
         self.color = color
@@ -13,7 +13,7 @@ class Splash:
         self.x, self.y = x, y 
 
     def random_splash(self, max_rank, length, width):
-        self.color = np.array([np.random.randint(0,255) for i in range(3)], dtype=np.int64)
+        self.color = np.array([np.random.randint(0,255) for i in range(3)], dtype=np.uint64)
         self.rank = np.random.randint(0, max_rank)
         self.r = np.random.randint(1, Splash.DEFAULT_R+1)
         self.x = np.random.randint(0, length)

@@ -46,7 +46,7 @@ class Individual:
         def outside_of_splash(pixel, x, y, r):
             return (pixel[0]-x)**2 + (pixel[1]-y)**2 > r**2
         
-        pixels_array = np.zeros((Individual.LENGTH, Individual.WIDTH, 3), dtype=np.int64)
+        pixels_array = np.zeros((Individual.LENGTH, Individual.WIDTH, 3), dtype=np.uint64)
         pixels_array_ranks = np.zeros((Individual.LENGTH, Individual.WIDTH, 1))
  
         for splash in self.splash_parameters:
@@ -69,3 +69,4 @@ class Individual:
     """
     def show_image(self):
         plt.imshow(self.pixels_array)
+    
