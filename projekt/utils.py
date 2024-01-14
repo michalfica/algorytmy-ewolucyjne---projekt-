@@ -30,11 +30,24 @@ class Utils:
     compute RBG distance 
     """
     def objective_function(self, individual):
+        cnt = 0 
         result = 0 
         for i in range(self.length):
             for j in range(self.width):
                 for c in range(3):
-                    result += (abs(self.objective_picture[i][j][c] - individual.pixels_array[i][j][c]))**2
+                    
+                    pixel_docelowy = int(self.objective_picture[i][j][c])
+                    pixel_aktualny = int(individual.pixels_array[i][j][c])
+                    difference = abs( pixel_aktualny - pixel_docelowy )  
+                    
+                    difference = int(difference)
+
+                    # print('róznica to: ',  difference, ' dodaje: ', difference*difference, " result = ", result, "piksele to: ", pixel_aktualny, " oraz: ",  pixel_docelowy)
+
+                    result += difference*difference
+                    # cnt += 1 
+                    # if cnt > 500: 
+                    #     return result 
         return result 
     
     def create_initial_population(self, n):
