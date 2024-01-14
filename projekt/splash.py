@@ -1,7 +1,7 @@
 import numpy as np
 
 class Splash:
-    DEFAULT_R = 65 
+    DEFAULT_R = 100 
     MAX_RANK  = 10 
 
     BLACK = np.array([0, 0, 0], dtype=np.int64)

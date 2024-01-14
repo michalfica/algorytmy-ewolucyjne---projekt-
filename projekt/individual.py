@@ -15,7 +15,7 @@ class Individual:
     N             - liczba plam  
     """
     LENGTH, WIDTH = 720, 483   
-    N             = 20
+    N             = 50
 
     """
     splash_parameters - tablica z parametrami kolejnych plam (kolorem, rangą, położeniem)
