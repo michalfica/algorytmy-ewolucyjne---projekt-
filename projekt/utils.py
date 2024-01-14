@@ -98,16 +98,22 @@ class Utils:
 
         assert num_of_splashes%2==0, 'liczba plam powinna byc parzysta !'
 
+        splashes_1_x_sorted = [(indiv1.splash_parameters[i].x,i) for i in range(num_of_splashes)]
+        splashes_1_x_sorted = sorted(splashes_1_x_sorted, key=cmp_to_key(lambda item1, item2: item1[0] - item2[0]))
+
+        splashes_2_x_sorted = [(indiv2.splash_parameters[i].x,i) for i in range(num_of_splashes)]
+        splashes_2_x_sorted = sorted(splashes_2_x_sorted, key=cmp_to_key(lambda item1, item2: item1[0] - item2[0]))
+
         splashes1, splashes2 = list(), list()
         for i in range(int(num_of_splashes/2)):
-            splash2, splash1 = indiv2.splash_parameters[i], indiv1.splash_parameters[i]
+            splash2, splash1 = indiv2.splash_parameters[splashes_2_x_sorted[i][1]], indiv1.splash_parameters[splashes_1_x_sorted[i][1]]
             copy_of_splash2, copy_of_splash1 = copy.deepcopy(splash2), copy.deepcopy(splash1)  
             splashes1.append(copy_of_splash2)
             splashes2.append(copy_of_splash1)
     
         for i in range(int(num_of_splashes/2), num_of_splashes):
-            splashes1.append(copy.deepcopy(indiv1.splash_parameters[i]))
-            splashes2.append(copy.deepcopy(indiv2.splash_parameters[i]))
+            splashes1.append(copy.deepcopy(indiv1.splash_parameters[splashes_1_x_sorted[i][1]]))
+            splashes2.append(copy.deepcopy(indiv2.splash_parameters[splashes_2_x_sorted[i][1]]))
         
         child1, child2 = Individual(splashes1), Individual(splashes2)
         return child1, child2
