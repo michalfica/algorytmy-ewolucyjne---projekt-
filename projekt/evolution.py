@@ -11,7 +11,7 @@ from population import Population
 
 class Evolution:
 
-    def __init__(self, problem=None, num_of_generations=1, population_size=10, tournament_prob=0.9, 
+    def __init__(self, problem=None, num_of_generations=10, population_size=10, tournament_prob=0.9, 
                  cross_over_param=2, mutation_param=5):
         self.utils = Utils('monalisa.jpg')
         self.population = None
@@ -20,20 +20,31 @@ class Evolution:
         self.population_size = population_size
 
     def evolve(self):
+        # -------------------------------------------------------------------------
         some_statistics = []
-
+        cnt = 0 
+        print('startuje ewolucje !')
+        # -------------------------------------------------------------------------
+        
         self.population = self.utils.create_initial_population(self.population_size)
         self.utils.evaluate_population(self.population)
 
         number_of_parents = int(self.population.population_size/2)
+        number_of_parents += number_of_parents%2
         for _ in range(self.num_of_generations):
-            
+            # -------------------------------------------------------------------------    
+            print('genracja nr: ', cnt )
             some_statistics.append(max([x.objective_value for x in self.population.population]))
+            # -------------------------------------------------------------------------
 
             parent_index = self.utils.parents_selection(self.population, number_of_parents)
             children_population = self.utils.create_children_population(self.population, parent_index)
-
             self.population = self.utils.replace(self.population, children_population)
 
-        best_individual = self.population[0]
+            # -------------------------------------------------------------------------
+            print('bestobj value: ', some_statistics[cnt])
+            cnt += 1 
+            # -------------------------------------------------------------------------
+
+        best_individual = self.population.population[0]
         return best_individual, some_statistics

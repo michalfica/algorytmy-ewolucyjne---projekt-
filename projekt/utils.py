@@ -70,6 +70,7 @@ class Utils:
         children = Population()
         children.population_size = parent_indexes.size
 
+        print('liczba rodzicow to ', parent_indexes.size )
         assert parent_indexes.size%2==0, 'liczba rodziców musi byc parzysta !'
 
         for i in range(0, parent_indexes.size-1, 2):
@@ -131,8 +132,8 @@ class Utils:
         children_population_size = children.population_size
 
         P.extend(children)
-        objective_values = [(P[i], i) for i in range(len(P.population))]
-        objective_values = sorted(objective_values, key=cmp_to_key(lambda item1, item2: item1.objective_value - item2.objective_value))
+        objective_values = [(P.population[i].objective_value, i) for i in range(len(P.population))]
+        objective_values = sorted(objective_values, key=cmp_to_key(lambda item1, item2: item1[0] - item2[0]))
         
         assert len(objective_values)==intitial_population_size+children_population_size, 'zgubiłem kogos lub dodalem za duzo'
         
