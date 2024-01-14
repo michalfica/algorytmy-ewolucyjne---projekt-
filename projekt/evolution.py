@@ -26,6 +26,8 @@ class Evolution:
         number_of_parents = int(self.population.population_size/2)
         for _ in range(self.num_of_generations):
             parent_index = self.utils.parents_selection(self.population, number_of_parents)
+            children_population = self.utils.create_children_population(self.population, parent_index)
+
             # return parent_index
 
 

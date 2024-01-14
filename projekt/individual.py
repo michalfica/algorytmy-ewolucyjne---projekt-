@@ -15,12 +15,12 @@ class Individual:
     N             - liczba plam  
     """
     LENGTH, WIDTH = 720, 483   
-    N             = 200
+    N             = 20
 
     """
     splash_parameters - tablica z parametrami kolejnych plam (kolorem, rangą, położeniem)
     """
-    def __init__(self, splash_parameters=None):
+    def __init__(self, splash_parameters=[]):
         self.splash_parameters = splash_parameters
         self.objective_value = None 
         self.pixels_array = None 
