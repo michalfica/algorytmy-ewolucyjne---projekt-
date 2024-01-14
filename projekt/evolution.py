@@ -13,7 +13,7 @@ class Evolution:
 
     def __init__(self, problem=None, num_of_generations=10, population_size=10, tournament_prob=0.9, 
                  cross_over_param=2, mutation_param=5):
-        self.utils = Utils('monalisa.jpg')
+        self.utils = Utils('GirlwithaPearl.jpg')
         self.population = None
         self.num_of_generations = num_of_generations
         self.best_of_generations = []
@@ -33,7 +33,6 @@ class Evolution:
         number_of_parents += number_of_parents%2
         for _ in range(self.num_of_generations):
             # -------------------------------------------------------------------------    
-            print('genracja nr: ', cnt )
             some_statistics.append(max([x.objective_value for x in self.population.population]))
             # -------------------------------------------------------------------------
 
@@ -42,7 +41,7 @@ class Evolution:
             self.population = self.utils.replace(self.population, children_population)
 
             # -------------------------------------------------------------------------
-            print('bestobj value: ', some_statistics[cnt])
+            print('genracja nr: ', cnt, ', bestobj value: ', some_statistics[cnt])
             cnt += 1 
             # -------------------------------------------------------------------------
 

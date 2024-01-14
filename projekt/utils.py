@@ -34,7 +34,7 @@ class Utils:
         for i in range(self.length):
             for j in range(self.width):
                 for c in range(3):
-                    result += abs(self.objective_picture[i][j][c] - individual.pixels_array[i][j][c])
+                    result += (abs(self.objective_picture[i][j][c] - individual.pixels_array[i][j][c]))**2
         return result 
     
     def create_initial_population(self, n):
@@ -70,7 +70,6 @@ class Utils:
         children = Population()
         children.population_size = parent_indexes.size
 
-        print('liczba rodzicow to ', parent_indexes.size )
         assert parent_indexes.size%2==0, 'liczba rodziców musi byc parzysta !'
 
         for i in range(0, parent_indexes.size-1, 2):

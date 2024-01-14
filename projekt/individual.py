@@ -14,7 +14,8 @@ class Individual:
     LENGTH, WIDTH - parametry obrazka
     N             - liczba plam  
     """
-    LENGTH, WIDTH = 720, 483   
+    # LENGTH, WIDTH = 720, 483   #mona lisa 
+    LENGTH, WIDTH = 480, 405   # girlwithapearl
     N             = 50
 
     """
