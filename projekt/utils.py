@@ -1,6 +1,7 @@
 from skimage import io
 import numpy as np 
 import copy 
+from functools import cmp_to_key
 
 import splash
 from imp import reload 
@@ -62,6 +63,9 @@ class Utils:
         parent_index = np.random.choice(P.population_size, number_of_parents, True, fitness_values).astype(np.int64)
         return parent_index
 
+    """
+    zwraca populację dzieci, każdyosobnik już zewaluowany 
+    """
     def create_children_population(self, P, parent_indexes):
         children = Population()
         children.population_size = parent_indexes.size
@@ -117,4 +121,27 @@ class Utils:
 
         child.splash_parameters[i].random_splash(Splash.MAX_RANK, Individual.LENGTH, Individual.WIDTH)
         child.splash_parameters[j].random_splash(Splash.MAX_RANK, Individual.LENGTH, Individual.WIDTH)
+
+    
+    """
+    zwraca populacje skladajaca sie z najlepszych osobnikow z pośród sumy zbiorów 'P' oraz 'children'
+    """
+    def replace(self, P, children): 
+        intitial_population_size = P.population_size
+        children_population_size = children.population_size
+
+        P.extend(children)
+        objective_values = [(P[i], i) for i in range(len(P.population))]
+        objective_values = sorted(objective_values, key=cmp_to_key(lambda item1, item2: item1.objective_value - item2.objective_value))
+        
+        assert len(objective_values)==intitial_population_size+children_population_size, 'zgubiłem kogos lub dodalem za duzo'
+        
+        indexes_of_best_individuals = [objective_values[i][1] for i in range(P.population_size)]
+        new_population = Population(P.population_size)
+        for idx in indexes_of_best_individuals:
+            new_population.append(P.population[idx])
+        
+        assert len(new_population.population)==intitial_population_size, 'przy zastepowaniu dodałem złą liczbe osobnikow do nowej populacji !'
+        
+        return new_population
          
