@@ -21,7 +21,7 @@ from utils import Utils
 
 class Evolution:
 
-    def __init__(self, problem=None, num_of_generations=90, population_size=100, tournament_prob=0.9, 
+    def __init__(self, problem=None, num_of_generations=100, population_size=25, tournament_prob=0.9, 
                  cross_over_param=2, mutation_param=5):
         self.utils = Utils('GirlwithaPearl.jpg')
         self.population = None

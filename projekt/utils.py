@@ -21,7 +21,7 @@ from population import Population
 
 class Utils:
 
-    def __init__(self, picture_name, mutation_probability=0.05):
+    def __init__(self, picture_name, mutation_probability=0.1):
         self.objective_picture = io.imread(picture_name)
         l, w, t = self.objective_picture.shape
         self.length, self.width = l, w 
@@ -30,7 +30,6 @@ class Utils:
     compute RBG distance 
     """
     def objective_function(self, individual):
-        cnt = 0 
         result = 0 
         for i in range(self.length):
             for j in range(self.width):
@@ -41,13 +40,7 @@ class Utils:
                     difference = abs( pixel_aktualny - pixel_docelowy )  
                     
                     difference = int(difference)
-
-                    # print('róznica to: ',  difference, ' dodaje: ', difference*difference, " result = ", result, "piksele to: ", pixel_aktualny, " oraz: ",  pixel_docelowy)
-
                     result += difference*difference
-                    # cnt += 1 
-                    # if cnt > 500: 
-                    #     return result 
         return result 
     
     def create_initial_population(self, n):
@@ -77,7 +70,7 @@ class Utils:
         return parent_index
 
     """
-    zwraca populację dzieci, każdyosobnik już zewaluowany 
+    zwraca populację dzieci, każdy osobnik już zewaluowany 
     """
     def create_children_population(self, P, parent_indexes):
         children = Population()
@@ -120,9 +113,8 @@ class Utils:
         splashes1, splashes2 = list(), list()
         for i in range(int(num_of_splashes/2)):
             splash2, splash1 = indiv2.splash_parameters[splashes_2_x_sorted[i][1]], indiv1.splash_parameters[splashes_1_x_sorted[i][1]]
-            copy_of_splash2, copy_of_splash1 = copy.deepcopy(splash2), copy.deepcopy(splash1)  
-            splashes1.append(copy_of_splash2)
-            splashes2.append(copy_of_splash1)
+            splashes1.append(copy.deepcopy(splash2))
+            splashes2.append(copy.deepcopy(splash1))
     
         for i in range(int(num_of_splashes/2), num_of_splashes):
             splashes1.append(copy.deepcopy(indiv1.splash_parameters[splashes_1_x_sorted[i][1]]))
@@ -163,4 +155,3 @@ class Utils:
         assert len(new_population.population)==intitial_population_size, 'przy zastepowaniu dodałem złą liczbe osobnikow do nowej populacji !'
         
         return new_population
-         

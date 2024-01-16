@@ -14,9 +14,9 @@ class Individual:
     LENGTH, WIDTH - parametry obrazka
     N             - liczba plam  
     """
-    # LENGTH, WIDTH = 720, 483   #mona lisa 
+    # LENGTH, WIDTH = 720, 483   # mona lisa 
     LENGTH, WIDTH = 480, 405   # girlwithapearl
-    N             = 50
+    N             = 10
 
     """
     splash_parameters - tablica z parametrami kolejnych plam (kolorem, rangą, położeniem)
