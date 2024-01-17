@@ -85,7 +85,7 @@ class Utils:
         
         for i in range(children.population_size):
             if np.random.random() < self.mutation_probability:
-                self.mutate(children.population[i])
+                self.mutate_completely_random(children.population[i])
         
         """
         wylicz tablice pikseli oraz wartość funkcji celu każdego osbonika z populacji dzieci 
@@ -126,12 +126,17 @@ class Utils:
     """
     zmienia kolor, promień oraz położenie dwóm losowym plamkom 
     """
-    def mutate(self, child):
+    def mutate_completely_random(self, child):
         num_of_splashes = len(child.splash_parameters)
         i, j = np.random.randint(num_of_splashes), np.random.randint(num_of_splashes)
 
         child.splash_parameters[i].random_splash(Splash.MAX_RANK, Individual.LENGTH, Individual.WIDTH)
         child.splash_parameters[j].random_splash(Splash.MAX_RANK, Individual.LENGTH, Individual.WIDTH)
+
+    def mutate_slightly(self, child):
+        num_of_splashes = len(child.splash_parameters)
+        i, parametr = np.random.randint(num_of_splashes), np.random.randint(Splash.number_of_parameters)
+        child.splash_parameters[i].change_slightly(parametr)
 
     
     """
