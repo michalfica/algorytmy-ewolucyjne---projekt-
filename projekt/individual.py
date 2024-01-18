@@ -16,7 +16,7 @@ class Individual:
     """
     # LENGTH, WIDTH = 720, 483   # mona lisa 
     LENGTH, WIDTH = 480, 405   # girlwithapearl
-    N             = 10
+    N             = 6
 
     """
     splash_parameters - tablica z parametrami kolejnych plam (kolorem, rangą, położeniem)

@@ -23,7 +23,7 @@ class Evolution:
 
     def __init__(self, problem=None, num_of_generations=100, population_size=25, tournament_prob=0.9, 
                  cross_over_param=2, mutation_param=5):
-        self.utils = Utils('GirlwithaPearl.jpg')
+        self.utils = Utils('pics/GirlwithaPearl.jpg')
         self.population = None
         self.num_of_generations = num_of_generations
         self.best_of_generations = []

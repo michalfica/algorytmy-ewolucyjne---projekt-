@@ -25,8 +25,6 @@ class Splash:
     def change_slightly(self, parametr):
         if parametr==Splash.COLOR:
             epsilon = np.array([np.random.randint(-40,40) for _ in range(3)], dtype=np.int64)
-
-            print('zmieniam kolory o : ', epsilon)
             self.color[0] += epsilon[0]
             self.color[1] += epsilon[1]
             self.color[2] += epsilon[2]
@@ -45,8 +43,6 @@ class Splash:
             epsilon = [np.random.randint(-40,40) for _ in range(2)]
             self.x += epsilon[0]
             self.y += epsilon[1]
-
-            print('przesuwam środek: ', epsilon)
             self.x = max(0, self.x)
             self.x = min(Splash.LENGTH-1, self.x)
             self.y = max(0, self.y)
@@ -55,7 +51,6 @@ class Splash:
         if parametr==Splash.RADIUS:
             epsilon = np.random.randint(-30,30)
             self.r += epsilon
-            print('zmieniam promien o ', epsilon)
             self.r = max(1, self.r)
             self.r = min(Splash.DEFAULT_R, self.r)
 

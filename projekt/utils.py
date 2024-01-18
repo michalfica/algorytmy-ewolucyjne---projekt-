@@ -2,6 +2,7 @@ from skimage import io
 import numpy as np 
 import copy 
 from functools import cmp_to_key
+from operator import itemgetter
 
 import splash
 from imp import reload 
@@ -74,6 +75,7 @@ class Utils:
     """
     def create_children_population(self, P, parent_indexes):
         children = Population()
+        amount_of_gentle_mutation = int(P.population_size/2)
         children.population_size = parent_indexes.size
 
         assert parent_indexes.size%2==0, 'liczba rodziców musi byc parzysta !'
@@ -86,12 +88,16 @@ class Utils:
         for i in range(children.population_size):
             if np.random.random() < self.mutation_probability:
                 self.mutate_completely_random(children.population[i])
-
-        
         # ----------------------------------------------------------------------------------
-        #  dodac tworzenie dzieci z najlepszego osobnika za pomocą mutacji mutate_slightly 
-                # TO DO ...
+        # tworzenie dzieci z najlepszego osobnika za pomocą mutacji mutate_slightly 
                 
+        children.population_size += + amount_of_gentle_mutation
+        best_parent_index = max([(P.population[i].objective_value, i) for i in parent_indexes], key=itemgetter(0))[1]
+
+        for _ in range(amount_of_gentle_mutation):
+            child = copy.deepcopy(P.population[best_parent_index])
+            self.mutate_slightly(child)
+            children.append(child)
         # ----------------------------------------------------------------------------------
         """
         wylicz tablice pikseli oraz wartość funkcji celu każdego osbonika z populacji dzieci 
@@ -144,7 +150,6 @@ class Utils:
         i, parametr = np.random.randint(num_of_splashes), np.random.randint(Splash.number_of_parameters)
         child.splash_parameters[i].change_slightly(parametr)
 
-    
     """
     zwraca populacje skladajaca sie z najlepszych osobnikow z pośród sumy zbiorów 'P' oraz 'children'
     """
@@ -155,7 +160,7 @@ class Utils:
         P.extend(children)
         objective_values = [(P.population[i].objective_value, i) for i in range(len(P.population))]
         objective_values = sorted(objective_values, key=cmp_to_key(lambda item1, item2: item1[0] - item2[0]))
-        
+
         assert len(objective_values)==intitial_population_size+children_population_size, 'zgubiłem kogos lub dodalem za duzo'
         
         indexes_of_best_individuals = [objective_values[i][1] for i in range(P.population_size)]
