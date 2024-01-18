@@ -86,7 +86,13 @@ class Utils:
         for i in range(children.population_size):
             if np.random.random() < self.mutation_probability:
                 self.mutate_completely_random(children.population[i])
+
         
+        # ----------------------------------------------------------------------------------
+        #  dodac tworzenie dzieci z najlepszego osobnika za pomocą mutacji mutate_slightly 
+                # TO DO ...
+                
+        # ----------------------------------------------------------------------------------
         """
         wylicz tablice pikseli oraz wartość funkcji celu każdego osbonika z populacji dzieci 
         """
