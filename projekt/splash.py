@@ -42,17 +42,20 @@ class Splash:
             self.rank = max(0, self.rank)
         
         if parametr==Splash.LOCATION:
-            epsilon = [np.random.randint(-10,10) for _ in range(2)]
+            epsilon = [np.random.randint(-40,40) for _ in range(2)]
             self.x += epsilon[0]
             self.y += epsilon[1]
+
+            print('przesuwam środek: ', epsilon)
             self.x = max(0, self.x)
             self.x = min(Splash.LENGTH-1, self.x)
             self.y = max(0, self.y)
             self.y = min(Splash.WIDTH-1, self.y)
         
         if parametr==Splash.RADIUS:
-            epsilon = np.random.random(-10,10)
+            epsilon = np.random.randint(-30,30)
             self.r += epsilon
+            print('zmieniam promien o ', epsilon)
             self.r = max(1, self.r)
             self.r = min(Splash.DEFAULT_R, self.r)
 
