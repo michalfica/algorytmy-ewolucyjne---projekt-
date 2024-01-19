@@ -4,6 +4,9 @@ import copy
 from functools import cmp_to_key
 from operator import itemgetter
 
+import cv2
+import colour
+
 import splash
 from imp import reload 
 reload(splash)
@@ -20,6 +23,8 @@ from splash import Splash
 from individual import Individual
 from population import Population
 
+
+
 class Utils:
 
     def __init__(self, picture_name, mutation_probability=0.1):
@@ -30,7 +35,7 @@ class Utils:
     """
     compute RBG distance 
     """
-    def objective_function(self, individual):
+    def objective_function_RGB(self, individual):
         result = 0 
         for i in range(self.length):
             for j in range(self.width):
@@ -43,6 +48,14 @@ class Utils:
                     difference = int(difference)
                     result += difference*difference
         return result 
+    
+    """
+    compute delta_E distance 
+    """
+    def objective_function(self, individual):
+        objective_image_lab = cv2.cvtColor(self.objective_picture, cv2.COLOR_RGB2Lab)
+        current_image_lab = cv2.cvtColor(np.float32(individual.pixels_array), cv2.COLOR_RGB2Lab)
+        return np.mean(colour.difference.delta_e.delta_E_CIE2000(objective_image_lab, current_image_lab))
     
     def create_initial_population(self, n):
         population = Population()
@@ -92,10 +105,11 @@ class Utils:
         # tworzenie dzieci z najlepszego osobnika za pomocą mutacji mutate_slightly 
                 
         children.population_size += + amount_of_gentle_mutation
-        best_parent_index = max([(P.population[i].objective_value, i) for i in parent_indexes], key=itemgetter(0))[1]
+        # best_parent_index = max([(P.population[i].objective_value, i) for i in parent_indexes], key=itemgetter(0))[1]
+        parent_index = self.parents_selection(P, 1)[0]
 
         for _ in range(amount_of_gentle_mutation):
-            child = copy.deepcopy(P.population[best_parent_index])
+            child = copy.deepcopy(P.population[parent_index])
             self.mutate_slightly(child)
             children.append(child)
         # ----------------------------------------------------------------------------------
@@ -144,10 +158,14 @@ class Utils:
 
         child.splash_parameters[i].random_splash(Splash.MAX_RANK, Individual.LENGTH, Individual.WIDTH)
         child.splash_parameters[j].random_splash(Splash.MAX_RANK, Individual.LENGTH, Individual.WIDTH)
-
+    
+    """
+    zmutuj kolor losowo wybranej plamki (delikatnie) + jeszcze jakis dodatkowy parametr (losowo wybrany)
+    """
     def mutate_slightly(self, child):
         num_of_splashes = len(child.splash_parameters)
         i, parametr = np.random.randint(num_of_splashes), np.random.randint(Splash.number_of_parameters)
+        child.splash_parameters[i].change_slightly(Splash.COLOR)
         child.splash_parameters[i].change_slightly(parametr)
 
     """

@@ -21,7 +21,7 @@ from utils import Utils
 
 class Evolution:
 
-    def __init__(self, problem=None, num_of_generations=100, population_size=25, tournament_prob=0.9, 
+    def __init__(self, problem=None, num_of_generations=1000, population_size=25, tournament_prob=0.9, 
                  cross_over_param=2, mutation_param=5):
         self.utils = Utils('pics/GirlwithaPearl.jpg')
         self.population = None
@@ -43,7 +43,7 @@ class Evolution:
         number_of_parents += number_of_parents%2
         for t in range(self.num_of_generations):
             # -------------------------------------------------------------------------    
-            some_statistics.append(max([x.objective_value for x in self.population.population])/(self.utils.length*self.utils.width))
+            some_statistics.append(max([x.objective_value for x in self.population.population]))
             # -------------------------------------------------------------------------
 
             parent_index = self.utils.parents_selection(self.population, number_of_parents)
@@ -51,12 +51,13 @@ class Evolution:
             self.population = self.utils.replace(self.population, children_population)
 
             # -------------------------------------------------------------------------
-            print('genracja nr: ', cnt, ', bestobj value: ', some_statistics[cnt])
 
-            image_name = "LOG/im_" + str(t) + ".png"
-            img = self.population.population[0].pixels_array
-            RGB_img = np.flip(img, axis=-1) 
-            cv2.imwrite(image_name, RGB_img)
+            if cnt%10 == 0:
+                print('genracja nr: ', cnt, ', bestobj value: ', some_statistics[cnt])
+                image_name = "LOG/im_" + str(t) + ".png"
+                img = self.population.population[0].pixels_array
+                RGB_img = np.flip(img, axis=-1) 
+                cv2.imwrite(image_name, RGB_img)
 
             cnt += 1 
             # -------------------------------------------------------------------------
