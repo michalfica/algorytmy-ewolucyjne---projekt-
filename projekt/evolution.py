@@ -43,7 +43,7 @@ class Evolution:
         number_of_parents += number_of_parents%2
         for t in range(self.num_of_generations):
             # -------------------------------------------------------------------------    
-            some_statistics.append(max([x.objective_value for x in self.population.population]))
+            some_statistics.append(max([x.objective_value for x in self.population.population])/(self.utils.length*self.utils.width))
             # -------------------------------------------------------------------------
 
             parent_index = self.utils.parents_selection(self.population, number_of_parents)
