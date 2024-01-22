@@ -23,8 +23,6 @@ from splash import Splash
 from individual import Individual
 from population import Population
 
-
-
 class Utils:
 
     def __init__(self, picture_name, mutation_probability=0.1):
@@ -40,21 +38,18 @@ class Utils:
         for i in range(self.length):
             for j in range(self.width):
                 for c in range(3):
-                    
                     pixel_docelowy = int(self.objective_picture[i][j][c])
                     pixel_aktualny = int(individual.pixels_array[i][j][c])
-                    difference = abs( pixel_aktualny - pixel_docelowy )  
-                    
-                    difference = int(difference)
+                    difference = int(abs( pixel_aktualny - pixel_docelowy ))  
                     result += difference*difference
         return result 
     
     """
     compute delta_E distance 
     """
-    def objective_function(self, individual):
+    def objective_function(self, indiv):
         objective_image_lab = cv2.cvtColor(self.objective_picture, cv2.COLOR_RGB2Lab)
-        current_image_lab = cv2.cvtColor(np.float32(individual.pixels_array), cv2.COLOR_RGB2Lab)
+        current_image_lab = cv2.cvtColor(np.float32(indiv.pixels_array), cv2.COLOR_RGB2Lab)
         return np.mean(colour.difference.delta_e.delta_E_CIE2000(objective_image_lab, current_image_lab))
     
     def create_initial_population(self, n):
@@ -87,11 +82,16 @@ class Utils:
     zwraca populację dzieci, każdy osobnik już zewaluowany 
     """
     def create_children_population(self, P, parent_indexes):
+
+        print('zaczynam robienie dzieci!')
+        
         children = Population()
-        amount_of_gentle_mutation = int(P.population_size/2)
+        amount_of_gentle_mutation = int(3*P.population_size/4)
         children.population_size = parent_indexes.size
 
         assert parent_indexes.size%2==0, 'liczba rodziców musi byc parzysta !'
+        # ----------------------------------------------------------------------------------
+        # tworzenie dzieci za pomocą krzyżowania  
 
         for i in range(0, parent_indexes.size-1, 2):
             parent1, parent2 = P.population[i], P.population[i+1]
@@ -101,24 +101,25 @@ class Utils:
         for i in range(children.population_size):
             if np.random.random() < self.mutation_probability:
                 self.mutate_completely_random(children.population[i])
+        
+        print('skonczylem krzyzowac')
         # ----------------------------------------------------------------------------------
-        # tworzenie dzieci z najlepszego osobnika za pomocą mutacji mutate_slightly 
+        # tworzenie dzieci z 'prawie napewno' najlepszego osobnika za pomocą mutacji mutate_slightly 
                 
-        children.population_size += + amount_of_gentle_mutation
-        # best_parent_index = max([(P.population[i].objective_value, i) for i in parent_indexes], key=itemgetter(0))[1]
+        children.population_size += amount_of_gentle_mutation
         parent_index = self.parents_selection(P, 1)[0]
+        children.extend(self.mutate_slightly(copy.deepcopy(P.population[parent_index]), amount_of_gentle_mutation))
 
-        for _ in range(amount_of_gentle_mutation):
-            child = copy.deepcopy(P.population[parent_index])
-            self.mutate_slightly(child)
-            children.append(child)
+        print('skonczylem \'delikatnie\' mutowac')
         # ----------------------------------------------------------------------------------
+
         """
         wylicz tablice pikseli oraz wartość funkcji celu każdego osbonika z populacji dzieci 
         """
         for i in range(children.population_size):
             children.population[i].pixels_array = children.population[i].convert_to_pixels_array()
-            children.population[i].objective_value = self.objective_function(children.population[i])
+        self.evaluate_population(children)
+
         return children 
 
     """
@@ -160,13 +161,35 @@ class Utils:
         child.splash_parameters[j].random_splash(Splash.MAX_RANK, Individual.LENGTH, Individual.WIDTH)
     
     """
-    zmutuj kolor losowo wybranej plamki (delikatnie) + jeszcze jakis dodatkowy parametr (losowo wybrany)
+    mutuje 'delikatnie' danego osobnika k razy, szansa na zmiane koloru: 
+    zwraca liste nowych osobnikw 
     """
-    def mutate_slightly(self, child):
-        num_of_splashes = len(child.splash_parameters)
-        i, parametr = np.random.randint(num_of_splashes), np.random.randint(Splash.number_of_parameters)
-        child.splash_parameters[i].change_slightly(Splash.COLOR)
-        child.splash_parameters[i].change_slightly(parametr)
+    def mutate_slightly(self, parent, k, default_parametr=-1):
+        children = Population()
+
+        for _ in range(k):
+            child = copy.deepcopy(parent)
+        
+            num_of_splashes = len(child.splash_parameters)
+            i, parametr = np.random.randint(num_of_splashes), np.random.choice(Splash.number_of_parameters, 1, True, np.array([1/3, 2/9, 2/9, 2/9])).astype(np.int64)[0]
+                                                            # np.random.randint(Splash.number_of_parameters)
+            print('zmieniam ', parametr)
+
+            if default_parametr==Splash.COLOR:
+                parametr = Splash.COLOR
+
+            child.splash_parameters[i].change_slightly(parametr)
+            children.append(child)
+    
+        return children
+    
+    """
+    dodaje 2 plamki do kazdego osobnika w populacji     
+    """
+    def add_splash_to_population(self, P):
+        for individual in population.population:
+            individual.add_splash()
+        self.evaluate_population(P)
 
     """
     zwraca populacje skladajaca sie z najlepszych osobnikow z pośród sumy zbiorów 'P' oraz 'children'

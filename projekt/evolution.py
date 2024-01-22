@@ -21,7 +21,7 @@ from utils import Utils
 
 class Evolution:
 
-    def __init__(self, problem=None, num_of_generations=1000, population_size=25, tournament_prob=0.9, 
+    def __init__(self, problem=None, num_of_generations=1000, population_size=28, tournament_prob=0.9, 
                  cross_over_param=2, mutation_param=5):
         self.utils = Utils('pics/GirlwithaPearl.jpg')
         self.population = None
@@ -39,7 +39,7 @@ class Evolution:
         self.population = self.utils.create_initial_population(self.population_size)
         self.utils.evaluate_population(self.population)
 
-        number_of_parents = int(self.population.population_size/2)
+        number_of_parents = int(self.population.population_size/4)
         number_of_parents += number_of_parents%2
         for t in range(self.num_of_generations):
             # -------------------------------------------------------------------------    
@@ -54,10 +54,10 @@ class Evolution:
 
             if cnt%10 == 0:
                 print('genracja nr: ', cnt, ', bestobj value: ', some_statistics[cnt])
-                image_name = "LOG/im_" + str(t) + ".png"
+                image_name = "LOG/" + str(t) + ".png"
                 img = self.population.population[0].pixels_array
-                RGB_img = np.flip(img, axis=-1) 
-                cv2.imwrite(image_name, RGB_img)
+                BRG_img = np.flip(img, axis=-1) 
+                cv2.imwrite(image_name, BRG_img)
 
             cnt += 1 
             # -------------------------------------------------------------------------

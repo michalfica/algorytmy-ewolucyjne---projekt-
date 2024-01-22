@@ -5,7 +5,7 @@ class Splash:
     MAX_RANK  = 10 
     LENGTH, WIDTH = 480, 405  # obrazka - redundancja - co z tym zrobic ?? 
     number_of_parameters = 4
-    COLOR, RANK, LOCATION, RADIUS = 0, 1, 2, 3, 
+    COLOR, RANK, LOCATION, RADIUS = 0, 1, 2, 3
 
     BLACK = np.array([0, 0, 0], dtype=np.uint64)
 
@@ -24,7 +24,7 @@ class Splash:
 
     def change_slightly(self, parametr):
         if parametr==Splash.COLOR:
-            epsilon = np.array([np.random.randint(-50,50) for _ in range(3)], dtype=np.int64)
+            epsilon = np.array([np.random.randint(-40,40) for _ in range(3)], dtype=np.int64)
             self.color[0] += epsilon[0]
             self.color[1] += epsilon[1]
             self.color[2] += epsilon[2]
@@ -39,7 +39,7 @@ class Splash:
             self.rank = min(Splash.MAX_RANK, self.rank)
             self.rank = max(0, self.rank)
         
-        if parametr==Splash.LOCATION:
+        if parametr == Splash.LOCATION:
             epsilon = [np.random.randint(-40,40) for _ in range(2)]
             self.x += epsilon[0]
             self.y += epsilon[1]
@@ -49,7 +49,7 @@ class Splash:
             self.y = min(Splash.WIDTH-1, self.y)
         
         if parametr==Splash.RADIUS:
-            epsilon = np.random.randint(-40,40)
+            epsilon = np.random.randint(-30,30)
             self.r += epsilon
             self.r = max(1, self.r)
             self.r = min(Splash.DEFAULT_R, self.r)
