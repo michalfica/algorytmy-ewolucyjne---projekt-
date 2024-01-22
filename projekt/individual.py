@@ -16,7 +16,6 @@ class Individual:
     """
     # LENGTH, WIDTH = 720, 483   # mona lisa 
     LENGTH, WIDTH = 480, 405   # girlwithapearl
-    N             = 6
 
     """
     splash_parameters - tablica z parametrami kolejnych plam (kolorem, rangą, położeniem)
@@ -25,14 +24,29 @@ class Individual:
         self.splash_parameters = splash_parameters
         self.objective_value = None 
         self.pixels_array = None 
+        self.N = 6 
+        self.current_largest_rank = Splash.INITIAL_MAX_RANK
 
     def generate_random_inidividual(self):
-        splash_list = [Splash() for i in range(Individual.N)]
+        splash_list = [Splash() for i in range(self.N)]
         for splash in splash_list:
-            splash.random_splash(Splash.MAX_RANK, Individual.LENGTH, Individual.WIDTH)
+            splash.random_splash(Splash.INITIAL_MAX_RANK, Individual.LENGTH, Individual.WIDTH)
 
         self.splash_parameters = splash_list
         self.pixels_array = self.convert_to_pixels_array()
+
+    """
+    dodaje nowa plamke do osobnika ---NIE PRZETESTOWANE--- !!!
+    """    
+    def add_splash(self):
+        self.current_largest_rank += 1 
+
+        new_splash = Splash()
+        new_splash.random_splash(Splash.INITIAL_MAX_RANK, Individual.LENGTH, Individual.WIDTH, True, self.current_largest_rank)
+        
+        self.splash_parameters.append(new_splash)
+        self.pixels_array = self.convert_to_pixels_array()
+        self.N += 1
 
     """
     zwraca tablice z wartością koloru w kazdym pixelu obrazka 

@@ -2,25 +2,28 @@ import numpy as np
 
 class Splash:
     DEFAULT_R = 100 
-    MAX_RANK  = 10 
+    INITIAL_MAX_RANK  = 10 
     LENGTH, WIDTH = 480, 405  # obrazka - redundancja - co z tym zrobic ?? 
     number_of_parameters = 4
     COLOR, RANK, LOCATION, RADIUS = 0, 1, 2, 3
 
     BLACK = np.array([0, 0, 0], dtype=np.uint64)
 
-    def __init__(self, color=BLACK, rank=MAX_RANK, x=0, y=0, r=DEFAULT_R):
+    def __init__(self, color=BLACK, rank=INITIAL_MAX_RANK, x=0, y=0, r=DEFAULT_R):
         self.color = color
         self.rank  = rank 
         self.r = r 
         self.x, self.y = x, y 
 
-    def random_splash(self, max_rank, length, width):
+    def random_splash(self, max_rank, length, width, set_specific_ranking=False, ranking=None):
         self.color = np.array([np.random.randint(0,255) for _ in range(3)], dtype=np.uint64)
         self.rank = np.random.randint(0, max_rank)
         self.r = np.random.randint(1, Splash.DEFAULT_R+1)
         self.x = np.random.randint(0, length)
         self.y = np.random.randint(0, width)
+
+        if set_specific_ranking == True:
+            self.rank = ranking
 
     def change_slightly(self, parametr):
         if parametr==Splash.COLOR:
@@ -34,9 +37,9 @@ class Splash:
                 self.color[i] = max(0, self.color[i]) 
 
         if parametr==Splash.RANK:
-            epsilon = np.random.randint(-3,3)
+            epsilon = np.random.randint(-2,2)
             self.rank += epsilon
-            self.rank = min(Splash.MAX_RANK, self.rank)
+            # self.rank = min(Splash.MAX_RANK, self.rank)
             self.rank = max(0, self.rank)
         
         if parametr == Splash.LOCATION:

@@ -82,9 +82,6 @@ class Utils:
     zwraca populację dzieci, każdy osobnik już zewaluowany 
     """
     def create_children_population(self, P, parent_indexes):
-
-        print('zaczynam robienie dzieci!')
-        
         children = Population()
         amount_of_gentle_mutation = int(3*P.population_size/4)
         children.population_size = parent_indexes.size
@@ -101,16 +98,12 @@ class Utils:
         for i in range(children.population_size):
             if np.random.random() < self.mutation_probability:
                 self.mutate_completely_random(children.population[i])
-        
-        print('skonczylem krzyzowac')
         # ----------------------------------------------------------------------------------
         # tworzenie dzieci z 'prawie napewno' najlepszego osobnika za pomocą mutacji mutate_slightly 
                 
         children.population_size += amount_of_gentle_mutation
         parent_index = self.parents_selection(P, 1)[0]
         children.extend(self.mutate_slightly(copy.deepcopy(P.population[parent_index]), amount_of_gentle_mutation))
-
-        print('skonczylem \'delikatnie\' mutowac')
         # ----------------------------------------------------------------------------------
 
         """
@@ -127,7 +120,7 @@ class Utils:
     zwraca 2 osobników z ustalonymi 'splash_parameters' ALE BEZ 'pixels_array' 
     """
     def crossover(self, indiv1, indiv2):
-        num_of_splashes = Individual.N
+        num_of_splashes = indiv1.N
 
         assert num_of_splashes%2==0, 'liczba plam powinna byc parzysta !'
 
@@ -157,8 +150,8 @@ class Utils:
         num_of_splashes = len(child.splash_parameters)
         i, j = np.random.randint(num_of_splashes), np.random.randint(num_of_splashes)
 
-        child.splash_parameters[i].random_splash(Splash.MAX_RANK, Individual.LENGTH, Individual.WIDTH)
-        child.splash_parameters[j].random_splash(Splash.MAX_RANK, Individual.LENGTH, Individual.WIDTH)
+        child.splash_parameters[i].random_splash(Splash.INITIAL_MAX_RANK, Individual.LENGTH, Individual.WIDTH)
+        child.splash_parameters[j].random_splash(Splash.INITIAL_MAX_RANK, Individual.LENGTH, Individual.WIDTH)
     
     """
     mutuje 'delikatnie' danego osobnika k razy, szansa na zmiane koloru: 
@@ -173,8 +166,6 @@ class Utils:
             num_of_splashes = len(child.splash_parameters)
             i, parametr = np.random.randint(num_of_splashes), np.random.choice(Splash.number_of_parameters, 1, True, np.array([1/3, 2/9, 2/9, 2/9])).astype(np.int64)[0]
                                                             # np.random.randint(Splash.number_of_parameters)
-            print('zmieniam ', parametr)
-
             if default_parametr==Splash.COLOR:
                 parametr = Splash.COLOR
 
@@ -187,8 +178,10 @@ class Utils:
     dodaje 2 plamki do kazdego osobnika w populacji     
     """
     def add_splash_to_population(self, P):
-        for individual in population.population:
-            individual.add_splash()
+        for individual in P.population:
+            for _ in range(2):
+                individual.add_splash()
+
         self.evaluate_population(P)
 
     """
