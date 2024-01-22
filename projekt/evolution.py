@@ -21,7 +21,7 @@ from utils import Utils
 
 class Evolution:
 
-    def __init__(self, problem=None, num_of_generations=1000, population_size=4, tournament_prob=0.9, 
+    def __init__(self, problem=None, num_of_generations=1000, population_size=28, tournament_prob=0.9, 
                  cross_over_param=2, mutation_param=5):
         self.utils = Utils('pics/GirlwithaPearl.jpg')
         self.population = None
@@ -45,7 +45,7 @@ class Evolution:
         number_of_parents += number_of_parents%2
         for t in range(self.num_of_generations):
             # -------------------------------------------------------------------------    
-            some_statistics.append(max([x.objective_value for x in self.population.population]))
+            some_statistics.append(min([x.objective_value for x in self.population.population]))
             # -------------------------------------------------------------------------
 
             if self.previous_best_score is None:
@@ -55,10 +55,10 @@ class Evolution:
             else:
                 self.no_difference_counter += 1
 
-            if self.no_difference_counter == 4:
+            if self.no_difference_counter == 10:
                 print('juz od ', self.no_difference_counter, 'nic sie nie zmienia !')
                 self.utils.add_splash_to_population(self.population)
-                self.no_difference_counter = 0 
+                self.no_difference_counter = 0
 
             parent_index = self.utils.parents_selection(self.population, number_of_parents)
             children_population = self.utils.create_children_population(self.population, parent_index)
