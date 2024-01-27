@@ -27,10 +27,11 @@ class Individual:
         self.N = 6 
         self.current_largest_rank = Splash.INITIAL_MAX_RANK
 
-    def generate_random_inidividual(self):
+    def generate_random_inidividual(self, _objective_picure=None):
         splash_list = [Splash() for i in range(self.N)]
         for splash in splash_list:
-            splash.random_splash(Splash.INITIAL_MAX_RANK, Individual.LENGTH, Individual.WIDTH)
+            # print('onbkective picture', _objective_picure)
+            splash.random_splash(Splash.INITIAL_MAX_RANK, Individual.LENGTH, Individual.WIDTH, False, None,  objective_picture=_objective_picure)
 
         self.splash_parameters = splash_list
         self.pixels_array = self.convert_to_pixels_array()
@@ -38,11 +39,11 @@ class Individual:
     """
     dodaje nowa plamke do osobnika ---NIE PRZETESTOWANE--- !!!
     """    
-    def add_splash(self):
+    def add_splash(self, objective_picture):
         self.current_largest_rank += 1 
 
         new_splash = Splash()
-        new_splash.random_splash(Splash.INITIAL_MAX_RANK, Individual.LENGTH, Individual.WIDTH, True, self.current_largest_rank)
+        new_splash.random_splash(Splash.INITIAL_MAX_RANK, Individual.LENGTH, Individual.WIDTH, True, self.current_largest_rank, objective_picture)
         
         self.splash_parameters.append(new_splash)
         self.pixels_array = self.convert_to_pixels_array()

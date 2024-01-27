@@ -48,16 +48,19 @@ class Utils:
     compute delta_E distance 
     """
     def objective_function(self, indiv):
-        objective_image_lab = cv2.cvtColor(self.objective_picture, cv2.COLOR_RGB2Lab)
-        current_image_lab = cv2.cvtColor(np.float32(indiv.pixels_array), cv2.COLOR_RGB2Lab)
-        return np.mean(colour.difference.delta_e.delta_E_CIE2000(objective_image_lab, current_image_lab))
+        # objective_image_lab = cv2.cvtColor(self.objective_picture, cv2.COLOR_RGB2Lab)
+        # current_image_lab = cv2.cvtColor(np.float32(indiv.pixels_array), cv2.COLOR_RGB2Lab)
+        # return np.mean(colour.difference.delta_e.delta_E_CIE2000(objective_image_lab, current_image_lab))
+
+        return np.mean(colour.difference.delta_e.delta_E_CIE2000(np.array(self.objective_picture), np.array(indiv.pixels_array)))
+
     
     def create_initial_population(self, n):
         population = Population()
         population.population_size = n
         for _ in range(population.population_size):
             individual = Individual()
-            individual.generate_random_inidividual()
+            individual.generate_random_inidividual(self.objective_picture)
             population.append(individual)
         return population
 
@@ -95,9 +98,9 @@ class Utils:
             child1, child2 = self.crossover(parent1, parent2)
             children.extend([child1, child2])
         
-        for i in range(children.population_size):
-            if np.random.random() < self.mutation_probability:
-                self.mutate_completely_random(children.population[i])
+        # for i in range(children.population_size):
+        #     if np.random.random() < self.mutation_probability:
+        #         self.mutate_completely_random(children.population[i])
         # ----------------------------------------------------------------------------------
         # tworzenie dzieci z 'prawie napewno' najlepszego osobnika za pomocą mutacji mutate_slightly 
                 
@@ -157,14 +160,15 @@ class Utils:
     mutuje 'delikatnie' danego osobnika k razy, szansa na zmiane koloru: 
     zwraca liste nowych osobnikw 
     """
-    def mutate_slightly(self, parent, k, default_parametr=-1):
+    def mutate_slightly(self, parent, k=1, default_parametr=-1):
         children = Population()
 
         for _ in range(k):
             child = copy.deepcopy(parent)
         
             num_of_splashes = len(child.splash_parameters)
-            i, parametr = np.random.randint(num_of_splashes), np.random.choice(Splash.number_of_parameters, 1, True, np.array([1/3, 2/9, 2/9, 2/9])).astype(np.int64)[0]
+            i, parametr = np.random.randint(num_of_splashes), np.random.choice(Splash.number_of_parameters, 1, True, np.array([1/3, 1/10, 3/10, 4/15])).astype(np.int64)[0]
+                                                                                                                            # [1/3, 2/9, 2/9, 2/9]
                                                             # np.random.randint(Splash.number_of_parameters)
             if default_parametr==Splash.COLOR:
                 parametr = Splash.COLOR
@@ -180,7 +184,7 @@ class Utils:
     def add_splash_to_population(self, P):
         for individual in P.population:
             for _ in range(2):
-                individual.add_splash()
+                individual.add_splash(self.objective_picture)
 
         self.evaluate_population(P)
 

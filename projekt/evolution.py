@@ -1,5 +1,6 @@
 import cv2
 import numpy as np
+import json
 from imp import reload 
 
 import utils
@@ -21,7 +22,7 @@ from utils import Utils
 
 class Evolution:
 
-    def __init__(self, problem=None, num_of_generations=1000, population_size=28, tournament_prob=0.9, 
+    def __init__(self, problem=None, num_of_generations=20000, population_size=25, tournament_prob=0.9, 
                  cross_over_param=2, mutation_param=5):
         self.utils = Utils('pics/GirlwithaPearl.jpg')
         self.population = None
@@ -78,3 +79,18 @@ class Evolution:
 
         best_individual = self.population.population[0]
         return best_individual, some_statistics
+    
+    def save_population(self, path):
+        """ Save population to json file """
+        out = [indiv.splash_parameters.tolist() for indiv in self.population.population]
+        with open(path, "w") as f:
+            json.dump(out, f)
+            
+    # def load(self, path):
+    #     """ Load population from json file """
+    #     with open(path) as f:
+    #         inp = json.load(f)
+
+    #     self.population = [Organism(np.array(x)) for x in inp]
+    #     for o in self.population:
+    #         self.calc_fitness(o)
