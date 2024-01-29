@@ -27,10 +27,12 @@ class Evolution:
         self.utils = Utils('pics/GirlwithaPearl.jpg')
         self.population = None
         self.num_of_generations = num_of_generations
-        self.best_of_generations = []
         self.population_size = population_size
-        self.no_difference_counter = 0
-        self.previous_best_score = None
+
+        self.portion_size = 6 
+        self.minimal_iteration_with_portion = 50 
+        self.time_to_add_new_portion = 20                                          # liczba iteracji bez zmian, po której dodaję nową porcje plam do populacji 
+        self.number_of_iteration_with_current_portion = 0 
 
     def evolve(self):
         # -------------------------------------------------------------------------
@@ -42,31 +44,30 @@ class Evolution:
         self.population = self.utils.create_initial_population(self.population_size)
         self.utils.evaluate_population(self.population)
 
-        number_of_parents = int(self.population.population_size/4)
+        number_of_parents = int(self.population.population_size/2)
         number_of_parents += number_of_parents%2
+
+        assert self.minimal_iteration_with_portion > self.time_to_add_new_portion, 'za wczesnie chce dodawać nowe porcje!'
+
         for t in range(self.num_of_generations):
             # -------------------------------------------------------------------------    
             some_statistics.append(min([x.objective_value for x in self.population.population]))
             # -------------------------------------------------------------------------
 
-            if self.previous_best_score is None:
-                self.previous_best_score = some_statistics[cnt]
-            elif some_statistics[cnt] < self.previous_best_score:
-                self.previous_best_score = some_statistics[cnt]
-            else:
-                self.no_difference_counter += 1
-
-            if self.no_difference_counter == 10:
-                print('juz od ', self.no_difference_counter, 'nic sie nie zmienia !')
-                self.utils.add_splash_to_population(self.population)
-                self.no_difference_counter = 0
+            """
+            dodawanie porcji nowych plam 
+            """
+            if self.number_of_iteration_with_current_portion >= self.minimal_iteration_with_portion \
+                and some_statistics[cnt] == some_statistics[cnt - self.time_to_add_new_portion]:
+                print('z obecna porcja plam wykonałem: ', self.number_of_iteration_with_current_portion, ' iteracji i DODAJE NOWĄ PORCJĘ PLAM')
+                self.utils.add_splash_to_population(self.population, self.portion_size)
+                self.number_of_iteration_with_current_portion = 0
 
             parent_index = self.utils.parents_selection(self.population, number_of_parents)
-            children_population = self.utils.create_children_population(self.population, parent_index)
+            children_population = self.utils.create_children_population(self.population, parent_index, splahes_to_evolve=self.portion_size)
             self.population = self.utils.replace(self.population, children_population)
 
             # -------------------------------------------------------------------------
-
             if cnt%10 == 0:
                 print('genracja nr: ', cnt, ', bestobj value: ', some_statistics[cnt])
                 image_name = "LOG/" + str(t) + ".png"
@@ -75,6 +76,7 @@ class Evolution:
                 cv2.imwrite(image_name, BRG_img)
 
             cnt += 1 
+            self.number_of_iteration_with_current_portion += 1 
             # -------------------------------------------------------------------------
 
         best_individual = self.population.population[0]

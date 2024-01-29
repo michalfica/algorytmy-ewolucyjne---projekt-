@@ -84,7 +84,7 @@ class Utils:
     """
     zwraca populację dzieci, każdy osobnik już zewaluowany 
     """
-    def create_children_population(self, P, parent_indexes):
+    def create_children_population(self, P, parent_indexes, splahes_to_evolve=None):
         children = Population()
         amount_of_gentle_mutation = int(3*P.population_size/4)
         children.population_size = parent_indexes.size
@@ -106,7 +106,7 @@ class Utils:
                 
         children.population_size += amount_of_gentle_mutation
         parent_index = self.parents_selection(P, 1)[0]
-        children.extend(self.mutate_slightly(copy.deepcopy(P.population[parent_index]), amount_of_gentle_mutation))
+        children.extend(self.mutate_slightly(copy.deepcopy(P.population[parent_index]), amount_of_gentle_mutation, splahes_to_evolve=splahes_to_evolve))
         # ----------------------------------------------------------------------------------
 
         """
@@ -160,16 +160,19 @@ class Utils:
     mutuje 'delikatnie' danego osobnika k razy, szansa na zmiane koloru: 
     zwraca liste nowych osobnikw 
     """
-    def mutate_slightly(self, parent, k=1, default_parametr=-1):
+    def mutate_slightly(self, parent, k=1, default_parametr=-1, splahes_to_evolve=None):
         children = Population()
-
         for _ in range(k):
             child = copy.deepcopy(parent)
         
             num_of_splashes = len(child.splash_parameters)
-            i, parametr = np.random.randint(num_of_splashes), np.random.choice(Splash.number_of_parameters, 1, True, np.array([1/3, 1/10, 3/10, 4/15])).astype(np.int64)[0]
+            if splahes_to_evolve is None: 
+                i = np.random.randint(num_of_splashes)
+            else: 
+                i = np.random.randint(num_of_splashes-splahes_to_evolve, num_of_splashes) # losuj do zmiany tylko ostanie splahes_to_evolve plam
+
+            parametr = np.random.choice(Splash.number_of_parameters, 1, True, np.array([1/3, 1/10, 3/10, 4/15])).astype(np.int64)[0]
                                                                                                                             # [1/3, 2/9, 2/9, 2/9]
-                                                            # np.random.randint(Splash.number_of_parameters)
             if default_parametr==Splash.COLOR:
                 parametr = Splash.COLOR
 
@@ -181,9 +184,9 @@ class Utils:
     """
     dodaje 2 plamki do kazdego osobnika w populacji     
     """
-    def add_splash_to_population(self, P):
+    def add_splash_to_population(self, P, number_of_new_splashes=2):
         for individual in P.population:
-            for _ in range(2):
+            for _ in range(number_of_new_splashes):
                 individual.add_splash(self.objective_picture)
 
         self.evaluate_population(P)

@@ -30,7 +30,6 @@ class Individual:
     def generate_random_inidividual(self, _objective_picure=None):
         splash_list = [Splash() for i in range(self.N)]
         for splash in splash_list:
-            # print('onbkective picture', _objective_picure)
             splash.random_splash(Splash.INITIAL_MAX_RANK, Individual.LENGTH, Individual.WIDTH, False, None,  objective_picture=_objective_picure)
 
         self.splash_parameters = splash_list
