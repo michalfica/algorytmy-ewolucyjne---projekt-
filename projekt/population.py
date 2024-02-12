@@ -1,4 +1,3 @@
-
 class Population:
     def __init__(self, population_size=None):
         self.population_size = population_size
