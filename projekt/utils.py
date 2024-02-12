@@ -2,9 +2,6 @@ from skimage import io
 import numpy as np 
 import copy 
 from functools import cmp_to_key
-from operator import itemgetter
-
-import cv2
 import colour
 
 import splash
@@ -30,6 +27,13 @@ class Utils:
         l, w, t = self.objective_picture.shape
         self.length, self.width = l, w 
         self.mutation_probability = mutation_probability
+    
+    """
+    compute delta_E distance 
+    """
+    def objective_function(self, indiv):
+        return np.mean(colour.difference.delta_e.delta_E_CIE2000(np.array(self.objective_picture), np.array(indiv.pixels_array)))
+    
     """
     compute RBG distance 
     """
@@ -43,17 +47,6 @@ class Utils:
                     difference = int(abs( pixel_aktualny - pixel_docelowy ))  
                     result += difference*difference
         return result 
-    
-    """
-    compute delta_E distance 
-    """
-    def objective_function(self, indiv):
-        # objective_image_lab = cv2.cvtColor(self.objective_picture, cv2.COLOR_RGB2Lab)
-        # current_image_lab = cv2.cvtColor(np.float32(indiv.pixels_array), cv2.COLOR_RGB2Lab)
-        # return np.mean(colour.difference.delta_e.delta_E_CIE2000(objective_image_lab, current_image_lab))
-
-        return np.mean(colour.difference.delta_e.delta_E_CIE2000(np.array(self.objective_picture), np.array(indiv.pixels_array)))
-
     
     def create_initial_population(self, n):
         population = Population()
@@ -97,10 +90,6 @@ class Utils:
             parent1, parent2 = P.population[i], P.population[i+1]
             child1, child2 = self.crossover(parent1, parent2)
             children.extend([child1, child2])
-        
-        # for i in range(children.population_size):
-        #     if np.random.random() < self.mutation_probability:
-        #         self.mutate_completely_random(children.population[i])
         # ----------------------------------------------------------------------------------
         # tworzenie dzieci z 'prawie napewno' najlepszego osobnika za pomocą mutacji mutate_slightly 
                 

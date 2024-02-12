@@ -15,15 +15,11 @@ reload(individual)
 import population 
 reload(population)
 
-from splash import Splash
-from individual import Individual
-from population import Population
 from utils import Utils 
 
 class Evolution:
 
-    def __init__(self, problem=None, num_of_generations=20000, population_size=25, tournament_prob=0.9, 
-                 cross_over_param=2, mutation_param=5):
+    def __init__(self, num_of_generations=20000, population_size=25):
         self.utils = Utils('pics/GirlwithaPearl.jpg')
         self.population = None
         self.num_of_generations = num_of_generations
@@ -58,8 +54,8 @@ class Evolution:
             dodawanie porcji nowych plam 
             """
             if self.number_of_iteration_with_current_portion >= self.minimal_iteration_with_portion \
-                and some_statistics[cnt] == some_statistics[cnt - self.time_to_add_new_portion]:
-                print('z obecna porcja plam wykonałem: ', self.number_of_iteration_with_current_portion, ' iteracji i DODAJE NOWĄ PORCJĘ PLAM')
+                and (some_statistics[cnt] == some_statistics[cnt - self.time_to_add_new_portion] \
+                     or self.number_of_iteration_with_current_portion >= 155) :
                 self.utils.add_splash_to_population(self.population, self.portion_size)
                 self.number_of_iteration_with_current_portion = 0
 
@@ -87,12 +83,3 @@ class Evolution:
         out = [indiv.splash_parameters.tolist() for indiv in self.population.population]
         with open(path, "w") as f:
             json.dump(out, f)
-            
-    # def load(self, path):
-    #     """ Load population from json file """
-    #     with open(path) as f:
-    #         inp = json.load(f)
-
-    #     self.population = [Organism(np.array(x)) for x in inp]
-    #     for o in self.population:
-    #         self.calc_fitness(o)
